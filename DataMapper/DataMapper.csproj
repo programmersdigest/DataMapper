@@ -2,13 +2,22 @@
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;net45;</TargetFrameworks>
     <RootNamespace>programmersdigest.DataMapper</RootNamespace>
-    <Version>0.3.1</Version>
+    <Version>0.4.0</Version>
     <Authors>Michael Sperber (programmersdigest.de)</Authors>
     <Company>programmersdigest.de</Company>
-    <Description>A simple object-relational mapper usable with weak (dynamic) or strict typed model classes.</Description>
+    <Description>A slim yet powerful ORM layer.</Description>
     <Copyright>Copyright © Michael Sperber (programmersdigest.de) 2018</Copyright>
     <PackageTags>ORM object relational mapper database data access layer weak strict typing model dynamic SQL</PackageTags>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <AssemblyName>programmersdigest.DataMapper</AssemblyName>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+    <PackageLicenseUrl>https://github.com/programmersdigest/DataMapper/blob/master/LICENSE</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/programmersdigest/DataMapper</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/programmersdigest/DataMapper</RepositoryUrl>
+    <RepositoryType>github</RepositoryType>
+    <AssemblyVersion>0.4.0.0</AssemblyVersion>
+    <FileVersion>0.4.0.0</FileVersion>
+    <PackageIconUrl>https://raw.githubusercontent.com/programmersdigest/DataMapper/master/Resources/Icon.png</PackageIconUrl>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(TargetFramework)'=='netstandard2.0'">
