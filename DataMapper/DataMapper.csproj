@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFrameworks>netstandard2.0;net45;</TargetFrameworks>
+    <RootNamespace>programmersdigest.DataMapper</RootNamespace>
+    <Version>0.3.1</Version>
+    <Authors>Michael Sperber (programmersdigest.de)</Authors>
+    <Company>programmersdigest.de</Company>
+    <Description>A simple object-relational mapper usable with weak (dynamic) or strict typed model classes.</Description>
+    <Copyright>Copyright © Michael Sperber (programmersdigest.de) 2018</Copyright>
+    <PackageTags>ORM object relational mapper database data access layer weak strict typing model dynamic SQL</PackageTags>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(TargetFramework)'=='netstandard2.0'">
+    <DefineConstants>NETSTANDARD</DefineConstants>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Util" Version="0.1.7" />
+  </ItemGroup>
+</Project>
