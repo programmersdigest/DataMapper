@@ -26,6 +26,5 @@
 
   <ItemGroup>
     <PackageReference Include="programmersdigest.Util" Version="0.2.4" />
-    <PackageReference Include="Util" Version="0.1.7" />
   </ItemGroup>
 </Project>
