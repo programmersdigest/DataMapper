@@ -5,8 +5,8 @@ using System.Threading.Tasks;
 
 namespace programmersdigest.DataMapper {
     public class Database : IDatabase {
-        private DatabaseCore _core;
-        private ConnectionBuilder _connectionBuilder;
+        private readonly DatabaseCore _core;
+        private readonly ConnectionBuilder _connectionBuilder;
 
         public Database(ConnectionBuilder connectionBuilder, LastInsertIdSelector lastInsertIdSelector) {
             _core = new DatabaseCore(lastInsertIdSelector);

@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace programmersdigest.DataMapper {
     internal class DatabaseCore {
-        private LastInsertIdSelector _lastInsertIdSelector;
+        private readonly LastInsertIdSelector _lastInsertIdSelector;
 
         public DatabaseCore(LastInsertIdSelector lastInsertIdSelector) {
             _lastInsertIdSelector = lastInsertIdSelector;
@@ -90,7 +90,7 @@ namespace programmersdigest.DataMapper {
         }
 
         internal async Task<long> Insert<T>(DbConnection conn, T item) {
-            IDictionary<string, object> data = item.GetDataColumnValues();
+            var data = item.GetDataColumnValues();
             return await Insert(conn, item.GetName(), data);
         }
 
@@ -129,7 +129,7 @@ namespace programmersdigest.DataMapper {
         }
 
         internal async Task Delete<T>(DbConnection conn, T item) {
-            IDictionary<string, object> keys = item.GetPrimaryKeyColumnValues();
+            var keys = item.GetPrimaryKeyColumnValues();
             if (!keys.Any()) {
                 throw new ArgumentException($"The type {typeof(T).Name} does not define a primary key. Please annotate at least one property with the {typeof(PrimaryKeyAttribute).Name}.");
             }

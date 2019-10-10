@@ -9,7 +9,9 @@ namespace programmersdigest.DataMapper {
     internal static class DataExtensions {
         public static void AddParameters(this DbCommand command, IDictionary<string, object> data) {
             if (command == null || data == null)
+            {
                 return;
+            }                
 
             foreach (var kvp in data) {
                 var parameter = command.CreateParameter();
@@ -37,12 +39,12 @@ namespace programmersdigest.DataMapper {
                 [typeof(float?)] = o => reader.GetValue(o) is DBNull ? (float?)null : reader.GetFloat(o),
                 [typeof(Guid)] = o => reader.GetGuid(o),
                 [typeof(Guid?)] = o => reader.GetValue(o) is DBNull ? (Guid?)null : reader.GetGuid(o),
-                [typeof(Int16)] = o => reader.GetInt16(o),
-                [typeof(Int16?)] = o => reader.GetValue(o) is DBNull ? (Int16?)null : reader.GetInt16(o),
-                [typeof(Int32)] = o => reader.GetInt32(o),
-                [typeof(Int32?)] = o => reader.GetValue(o) is DBNull ? (Int32?)null : reader.GetInt32(o),
-                [typeof(Int64)] = o => reader.GetInt64(o),
-                [typeof(Int64?)] = o => reader.GetValue(o) is DBNull ? (Int64?)null : reader.GetInt64(o),
+                [typeof(short)] = o => reader.GetInt16(o),
+                [typeof(short?)] = o => reader.GetValue(o) is DBNull ? (short?)null : reader.GetInt16(o),
+                [typeof(int)] = o => reader.GetInt32(o),
+                [typeof(int?)] = o => reader.GetValue(o) is DBNull ? (int?)null : reader.GetInt32(o),
+                [typeof(long)] = o => reader.GetInt64(o),
+                [typeof(long?)] = o => reader.GetValue(o) is DBNull ? (long?)null : reader.GetInt64(o),
                 [typeof(Stream)] = o => reader.GetValue(o) is DBNull ? null : reader.GetStream(o),
                 [typeof(string)] = o => reader.GetValue(o) is DBNull ? null : reader.GetString(o),
                 [typeof(TextReader)] = o => reader.GetValue(o) is DBNull ? null : reader.GetTextReader(o),
