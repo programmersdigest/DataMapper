@@ -79,12 +79,11 @@ namespace programmersdigest.DataMapper {
                 _lastInsertIdSelector?.Invoke(cmd);
 
                 var result = await cmd.ExecuteScalarAsync().ConfigureAwait(false);
-                if (result is long) {
-                    return (long)result;
+                if (result is long numberOfInsertedRows) {
+                    return numberOfInsertedRows;
                 }
-                else {
-                    return -1;
-                }
+                
+                return -1;                
             }
         }
 

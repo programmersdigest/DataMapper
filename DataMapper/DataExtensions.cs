@@ -1,12 +1,41 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data.Common;
 using System.IO;
-using System.Linq;
 
 namespace programmersdigest.DataMapper {
     internal static class DataExtensions {
+
+        private static Dictionary<Type, Func<int, DbDataReader, object>> _columnValueRetrieverFunctionByType = new Dictionary<Type, Func<int, DbDataReader, object>>
+        {
+            [typeof(bool)] = (index, reader) => reader.GetBoolean(index),
+            [typeof(bool?)] = (index, reader) => reader.GetNullableBool(index),
+            [typeof(byte)] = (index, reader) => reader.GetByte(index),
+            [typeof(byte?)] = (index, reader) => reader.GetNullableByte(index),
+            [typeof(char)] = (index, reader) => reader.GetChar(index),
+            [typeof(char?)] = (index, reader) => reader.GetNullableChar(index),
+            [typeof(DateTime)] = (index, reader) => reader.GetDateTime(index),
+            [typeof(DateTime?)] = (index, reader) => reader.GetNullableDateTime(index),
+            [typeof(decimal)] = (index, reader) => reader.GetDecimal(index),
+            [typeof(decimal?)] = (index, reader) => reader.GetNullableDecimal(index),
+            [typeof(double)] = (index, reader) => reader.GetDouble(index),
+            [typeof(double?)] = (index, reader) => reader.GetNullableDouble(index),
+            [typeof(float)] = (index, reader) => reader.GetFloat(index),
+            [typeof(float?)] = (index, reader) => reader.GetNullableFloat(index),
+            [typeof(Guid)] = (index, reader) => reader.GetGuid(index),
+            [typeof(Guid?)] = (index, reader) => reader.GetNullableGuid(index),
+            [typeof(short)] = (index, reader) => reader.GetInt16(index),
+            [typeof(short?)] = (index, reader) => reader.GetNullableInt16(index),
+            [typeof(int)] = (index, reader) => reader.GetInt32(index),
+            [typeof(int?)] = (index, reader) => reader.GetNullableInt32(index),
+            [typeof(long)] = (index, reader) => reader.GetInt64(index),
+            [typeof(long?)] = (index, reader) => reader.GetNullableInt64(index),
+            [typeof(Stream)] = (index, reader) => reader.GetNullableStream(index),
+            [typeof(string)] = (index, reader) => reader.GetNullableString(index),
+            [typeof(TextReader)] = (index, reader) => reader.GetNullableTextReader(index),
+            [typeof(object)] = (index, reader) => reader.GetNullableValue(index)
+        };
+
         public static void AddParameters(this DbCommand command, IDictionary<string, object> data) {
             if (command == null || data == null)
             {
@@ -21,56 +50,52 @@ namespace programmersdigest.DataMapper {
             }
         }
 
-        public static object GetFieldValue(this DbDataReader reader, Type targetType, int ordinal) {
-            var types = new Dictionary<Type, Func<int, object>> {
-                [typeof(bool)] = o => reader.GetBoolean(o),
-                [typeof(bool?)] = o => reader.GetValue(o) is DBNull ? (bool?)null : reader.GetBoolean(o),
-                [typeof(byte)] = o => reader.GetByte(o),
-                [typeof(byte?)] = o => reader.GetValue(o) is DBNull ? (byte?)null : reader.GetByte(o),
-                [typeof(char)] = o => reader.GetChar(o),
-                [typeof(char?)] = o => reader.GetValue(o) is DBNull ? (char?)null : reader.GetChar(o),
-                [typeof(DateTime)] = o => reader.GetDateTime(o),
-                [typeof(DateTime?)] = o => reader.GetValue(o) is DBNull ? (DateTime?)null : reader.GetDateTime(o),
-                [typeof(decimal)] = o => reader.GetDecimal(o),
-                [typeof(decimal?)] = o => reader.GetValue(o) is DBNull ? (decimal?)null : reader.GetDecimal(o),
-                [typeof(double)] = o => reader.GetDouble(o),
-                [typeof(double?)] = o => reader.GetValue(o) is DBNull ? (double?)null : reader.GetDouble(o),
-                [typeof(float)] = o => reader.GetFloat(o),
-                [typeof(float?)] = o => reader.GetValue(o) is DBNull ? (float?)null : reader.GetFloat(o),
-                [typeof(Guid)] = o => reader.GetGuid(o),
-                [typeof(Guid?)] = o => reader.GetValue(o) is DBNull ? (Guid?)null : reader.GetGuid(o),
-                [typeof(short)] = o => reader.GetInt16(o),
-                [typeof(short?)] = o => reader.GetValue(o) is DBNull ? (short?)null : reader.GetInt16(o),
-                [typeof(int)] = o => reader.GetInt32(o),
-                [typeof(int?)] = o => reader.GetValue(o) is DBNull ? (int?)null : reader.GetInt32(o),
-                [typeof(long)] = o => reader.GetInt64(o),
-                [typeof(long?)] = o => reader.GetValue(o) is DBNull ? (long?)null : reader.GetInt64(o),
-                [typeof(Stream)] = o => reader.GetValue(o) is DBNull ? null : reader.GetStream(o),
-                [typeof(string)] = o => reader.GetValue(o) is DBNull ? null : reader.GetString(o),
-                [typeof(TextReader)] = o => reader.GetValue(o) is DBNull ? null : reader.GetTextReader(o),
-                [typeof(object)] = o => reader.GetValue(o) is DBNull ? null : reader.GetValue(o)
-            };
-
-            if (types.TryGetValue(targetType, out var mapping)) {
-                return mapping(ordinal);
+        public static object GetFieldValue(this DbDataReader reader, Type targetType, int ordinal)
+        {
+            if (_columnValueRetrieverFunctionByType.TryGetValue(targetType, out var mapping))
+            {
+                return mapping(ordinal, reader);
             }
-            else if (targetType.IsEnum) {
-                var value = reader.GetValue(ordinal);
-                if (value is byte || value is int || value is long) {
-                    return Enum.ToObject(targetType, value);
-                }
-                else if (value is string) {
-                    var names = Enum.GetNames(targetType);
-                    var values = Enum.GetValues(targetType);
-                    for(var i = 0; i < names.Length; i++) {
-                        if (names[i] == (string)value) {
-                            return values.GetValue(i);
-                        }
+
+            if (!targetType.IsEnum)
+            {
+                return reader.GetValue(ordinal);
+            }
+
+            var value = reader.GetValue(ordinal);
+
+            if(TryGetEnumValue(value, targetType, out var enumValue))
+            {
+                return enumValue;
+            }
+
+            return value;
+        }
+
+        private static bool TryGetEnumValue(object value, Type targetType, out object enumValue)
+        {
+            if (value is byte || value is int || value is long)
+            {
+                enumValue = Enum.ToObject(targetType, value);
+                return true;
+            }
+
+            if (value is string enumMemberName)
+            {
+                var names = Enum.GetNames(targetType);
+                var values = Enum.GetValues(targetType);
+                for (var i = 0; i < names.Length; i++)
+                {
+                    if (names[i] == enumMemberName)
+                    {
+                        enumValue = values.GetValue(i);
+                        return true;
                     }
                 }
             }
 
-            return reader.GetValue(ordinal);
+            enumValue = null;
+            return false;
         }
     }
 }
