@@ -2,7 +2,7 @@
 using System.Data.Common;
 using System.IO;
 
-namespace programmersdigest.DataMapper
+namespace programmersdigest.DataMapper.Extensions
 {
     internal static class DataReaderExtensions
     {

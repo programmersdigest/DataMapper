@@ -4,7 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
-namespace programmersdigest.DataMapper {
+namespace programmersdigest.DataMapper.Extensions
+{
     internal static class DataObjectExtensions {
         private static Type RetrieveType(object item) {
             if (item is Type type) {

@@ -1,4 +1,5 @@
 ﻿using programmersdigest.DataMapper.Attributes;
+using programmersdigest.DataMapper.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Data.Common;

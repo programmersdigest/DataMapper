@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Data.Common;
 using System.IO;
 
-namespace programmersdigest.DataMapper {
+namespace programmersdigest.DataMapper.Extensions {
     internal static class DataExtensions {
 
-        private static Dictionary<Type, Func<int, DbDataReader, object>> _columnValueRetrieverFunctionByType = new Dictionary<Type, Func<int, DbDataReader, object>>
+        private static readonly Dictionary<Type, Func<int, DbDataReader, object>> _columnValueRetrieverFunctionByType = new Dictionary<Type, Func<int, DbDataReader, object>>
         {
             [typeof(bool)] = (index, reader) => reader.GetBoolean(index),
             [typeof(bool?)] = (index, reader) => reader.GetNullableBool(index),
