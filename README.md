@@ -2,6 +2,10 @@
 # DataMapper
 A slim yet powerful ORM layer.
 
+## Contributors
+Awesome-Source
+programmersdigest
+
 ## Description
 This project implements an object-relational-mapper. The goal of this project is to allow fluid work with (preferably strongly typed) objects instead of DataTables and DataRows. It does not provide database abstraction, as SQL-Code is still required.
 
