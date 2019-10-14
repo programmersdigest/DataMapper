@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace programmersdigest.DataMapper {
     public class TransactionalDatabase : IDatabase, IDisposable {
-        private ConnectionBuilder _connectionBuilder;
-        private DatabaseCore _core;
+        private readonly ConnectionBuilder _connectionBuilder;
+        private readonly DatabaseCore _core;
         private DbConnection _connection;
         private DbTransaction _transaction;
 

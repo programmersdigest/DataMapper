@@ -7,8 +7,8 @@ namespace programmersdigest.DataMapper.Migration {
     public class MigrationManager {
         internal const string META_VERSION_TABLE_NAME = "MetaVersion";
 
-        private Database _database;
-        private IEnumerable<Type> _migrations;
+        private readonly Database _database;
+        private readonly IEnumerable<Type> _migrations;
 
         public MigrationManager(Database database, MigrationLocator migrationLocator) {
             _database = database;
