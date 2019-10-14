@@ -26,7 +26,7 @@ This project is thus based on the idea, that object mapping is a worthy goal, wh
 Grab the latest version from NuGet https://www.nuget.org/packages/programmersdigest.DataMapper
 
 **Initialization**
-```
+```C#
 // Create the database (e.g. for SQLite), which takes
 // - a ConnectionBuilder delegate to create the SqlConnection and
 // - a LastInsertIdSelector delegate to change insert commands to retrieve the primary key of the inserted item.
@@ -42,7 +42,7 @@ var database = diContainer.Get<Database>();
 ```
 
 **Executing SQL**
-```
+```C#
 // Get data from the database (as dynamic)
 return await database.Select("SELECT * FROM \"MyTable\"");
 
@@ -91,7 +91,7 @@ public async Task DeleteAccount(Account account) {
 ```
 
 **Creating models**
-```
+```C#
 // The model class should be named like the table. If this is not possible, the
 // NameAttribute allows names differing from the database model.
 public class Employee {
