@@ -3,10 +3,12 @@
 A slim yet powerful ORM layer.
 
 ## Contributors
-Awesome-Source
-programmersdigest
+
+- Awesome-Source
+- programmersdigest
 
 ## Description
+
 This project implements an object-relational-mapper. The goal of this project is to allow fluid work with (preferably strongly typed) objects instead of DataTables and DataRows. It does not provide database abstraction, as SQL-Code is still required.
 
 More often than not, ORM is used as a name for two very different aspects of working with a database:
@@ -19,6 +21,7 @@ This project is thus based on the idea, that object mapping is a worthy goal, wh
 **Disclaimer**: This project is provided "as is". It may be incomplete and/or faulty. The author(s) of this project cannot be held responsible for any damage occurring due to using this software.
 
 ## Features
+
 - Mapping of relational data to strongly typed objects or dynamic
 - Various helper methods for CRUD operations (all using parameterized queries)
 - Full control over the SQL sent to the database
@@ -27,6 +30,7 @@ This project is thus based on the idea, that object mapping is a worthy goal, wh
 - Small and easy to use
 
 ## Usage
+
 Grab the latest version from NuGet https://www.nuget.org/packages/programmersdigest.DataMapper
 
 **Initialization**
@@ -131,6 +135,7 @@ public class Employee {
 ```
 
 ## Todos
+
 - Add comments on public members
 - Add unit and integration tests
 - Add support for insert scenarios with multiple primary keys
