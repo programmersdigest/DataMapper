@@ -1,5 +1,5 @@
 ﻿using programmersdigest.DataMapper.Attributes;
-using programmersdigest.Util;
+using programmersdigest.DataMapper.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Data.Common;
@@ -20,10 +20,10 @@ namespace programmersdigest.DataMapper {
                 cmd.CommandText = query;
                 cmd.AddParameters(keys);
 
-                using (var reader = await cmd.ExecuteReaderAsync()) {
+                using (var reader = await cmd.ExecuteReaderAsync().ConfigureAwait(false)) {
                     var results = new List<dynamic>();
 
-                    while (await reader.ReadAsync()) {
+                    while (await reader.ReadAsync().ConfigureAwait(false)) {
                         IDictionary<string, object> item = new ExpandoObject();
 
                         for (var i = 0; i < reader.FieldCount; i++) {
@@ -47,10 +47,10 @@ namespace programmersdigest.DataMapper {
 
                 var properties = typeof(T).GetColumnProperties();
 
-                using (var reader = await cmd.ExecuteReaderAsync()) {
+                using (var reader = await cmd.ExecuteReaderAsync().ConfigureAwait(false)) {
                     var results = new List<T>();
 
-                    while (await reader.ReadAsync()) {
+                    while (await reader.ReadAsync().ConfigureAwait(false)) {
                         var item = Activator.CreateInstance<T>();
 
                         for (var i = 0; i < reader.FieldCount; i++) {
@@ -79,19 +79,18 @@ namespace programmersdigest.DataMapper {
 
                 _lastInsertIdSelector?.Invoke(cmd);
 
-                var result = await cmd.ExecuteScalarAsync();
-                if (result is long) {
-                    return (long)result;
+                var result = await cmd.ExecuteScalarAsync().ConfigureAwait(false);
+                if (result is long numberOfInsertedRows) {
+                    return numberOfInsertedRows;
                 }
-                else {
-                    return -1;
-                }
+                
+                return -1;                
             }
         }
 
         internal async Task<long> Insert<T>(DbConnection conn, T item) {
             var data = item.GetDataColumnValues();
-            return await Insert(conn, item.GetName(), data);
+            return await Insert(conn, item.GetName(), data).ConfigureAwait(false);
         }
 
         internal async Task Update(DbConnection conn, string table, IDictionary<string, object> data, IDictionary<string, object> keys) {
@@ -103,7 +102,7 @@ namespace programmersdigest.DataMapper {
                 cmd.AddParameters(data);
                 cmd.AddParameters(keys);
 
-                await cmd.ExecuteNonQueryAsync();
+                await cmd.ExecuteNonQueryAsync().ConfigureAwait(false);
             }
         }
 
@@ -114,7 +113,7 @@ namespace programmersdigest.DataMapper {
                 throw new ArgumentException($"The type {typeof(T).Name} does not define a primary key. Please annotate at least one property with the {typeof(PrimaryKeyAttribute).Name}.");
             }
 
-            await Update(conn, item.GetName(), data, keys);
+            await Update(conn, item.GetName(), data, keys).ConfigureAwait(false);
         }
 
         internal async Task Delete(DbConnection conn, string table, IDictionary<string, object> keys) {
@@ -124,7 +123,7 @@ namespace programmersdigest.DataMapper {
                 cmd.CommandText = $"DELETE FROM \"{table}\" WHERE {whereStr}";
                 cmd.AddParameters(keys);
 
-                await cmd.ExecuteNonQueryAsync();
+                await cmd.ExecuteNonQueryAsync().ConfigureAwait(false);
             }
         }
 
@@ -134,14 +133,14 @@ namespace programmersdigest.DataMapper {
                 throw new ArgumentException($"The type {typeof(T).Name} does not define a primary key. Please annotate at least one property with the {typeof(PrimaryKeyAttribute).Name}.");
             }
 
-            await Delete(conn, item.GetName(), keys);
+            await Delete(conn, item.GetName(), keys).ConfigureAwait(false);
         }
 
         internal async Task Execute(DbConnection conn, string query) {
             using (var cmd = conn.CreateCommand()) {
                 cmd.CommandText = query;
 
-                await cmd.ExecuteNonQueryAsync();
+                await cmd.ExecuteNonQueryAsync().ConfigureAwait(false);
             }
         }
     }

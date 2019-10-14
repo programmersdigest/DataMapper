@@ -4,15 +4,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
-namespace programmersdigest.DataMapper {
+namespace programmersdigest.DataMapper.Extensions
+{
     internal static class DataObjectExtensions {
         private static Type RetrieveType(object item) {
-            if (item is Type) {
-                return (Type)item;
+            if (item is Type type) {
+                return type;
             }
-            else {
-                return item.GetType();
-            }
+            
+            return item.GetType();            
         }
 
         private static IEnumerable<PropertyInfo> GetPrimaryKeys(Type type) {

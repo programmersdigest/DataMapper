@@ -19,7 +19,7 @@ namespace programmersdigest.DataMapper {
         internal async Task<TransactionalDatabase> Open() {
             if (_connection == null) {
                 _connection = _connectionBuilder();
-                await _connection.OpenAsync();
+                await _connection.OpenAsync().ConfigureAwait(false);
 
                 _transaction = _connection.BeginTransaction();
             }
@@ -51,70 +51,70 @@ namespace programmersdigest.DataMapper {
 
 
         public async Task<IEnumerable<dynamic>> Select(string query) {
-            return await Select(query, null);
+            return await Select(query, null).ConfigureAwait(false);
         }
 
         public async Task<IEnumerable<dynamic>> Select(string query, IDictionary<string, object> keys) {
-            return await _core.Select(_connection, query, keys);
+            return await _core.Select(_connection, query, keys).ConfigureAwait(false);
         }
 
         public async Task<IEnumerable<T>> Select<T>(string query) {
-            return await Select<T>(query, null);
+            return await Select<T>(query, null).ConfigureAwait(false);
         }
 
         public async Task<IEnumerable<T>> Select<T>(string query, IDictionary<string, object> keys) {
-            return await _core.Select<T>(_connection, query, keys);
+            return await _core.Select<T>(_connection, query, keys).ConfigureAwait(false);
         }
 
 
         public async Task<dynamic> SelectSingle(string query) {
-            return await SelectSingle(query, null);
+            return await SelectSingle(query, null).ConfigureAwait(false);
         }
 
         public async Task<dynamic> SelectSingle(string query, IDictionary<string, object> keys) {
-            var result = await _core.Select(_connection, query, keys);
+            var result = await _core.Select(_connection, query, keys).ConfigureAwait(false);
             return result.SingleOrDefault();
         }
 
         public async Task<T> SelectSingle<T>(string query) {
-            return await SelectSingle<T>(query, null);
+            return await SelectSingle<T>(query, null).ConfigureAwait(false);
         }
 
         public async Task<T> SelectSingle<T>(string query, IDictionary<string, object> keys) {
-            var result = await _core.Select<T>(_connection, query, keys);
+            var result = await _core.Select<T>(_connection, query, keys).ConfigureAwait(false);
             return result.SingleOrDefault();
         }
 
 
         public async Task<long> Insert(string table, IDictionary<string, object> data) {
-            return await _core.Insert(_connection, table, data);
+            return await _core.Insert(_connection, table, data).ConfigureAwait(false);
         }
 
         public async Task<long> Insert<T>(T item) {
-            return await _core.Insert(_connection, item);
+            return await _core.Insert(_connection, item).ConfigureAwait(false);
         }
 
 
         public async Task Update(string table, IDictionary<string, object> data, IDictionary<string, object> keys) {
-            await _core.Update(_connection, table, data, keys);
+            await _core.Update(_connection, table, data, keys).ConfigureAwait(false);
         }
 
         public async Task Update<T>(T item) {
-            await _core.Update(_connection, item);
+            await _core.Update(_connection, item).ConfigureAwait(false);
         }
 
 
         public async Task Delete(string table, IDictionary<string, object> keys) {
-            await _core.Delete(_connection, table, keys);
+            await _core.Delete(_connection, table, keys).ConfigureAwait(false);
         }
 
         public async Task Delete<T>(T item) {
-            await _core.Delete(_connection, item);
+            await _core.Delete(_connection, item).ConfigureAwait(false);
         }
 
 
         public async Task Execute(string query) {
-            await _core.Execute(_connection, query);
+            await _core.Execute(_connection, query).ConfigureAwait(false);
         }
     }
 }

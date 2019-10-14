@@ -16,7 +16,7 @@ namespace programmersdigest.DataMapper.Migration {
         }
 
         public async Task<UpdateCheckResult> UpdateRequired() {
-            var databaseVersion = await GetDatabaseVersion();
+            var databaseVersion = await GetDatabaseVersion().ConfigureAwait(false);
 
             var migrationsToExecute = _migrations.Select(m => new { Version = m.Name.Replace("Migration_", ""), Type = m })
                                                  .OrderByDescending(m => m.Version);
@@ -29,7 +29,7 @@ namespace programmersdigest.DataMapper.Migration {
         }
 
         public async Task Migrate() {
-            var databaseVersion = await GetDatabaseVersion();
+            var databaseVersion = await GetDatabaseVersion().ConfigureAwait(false);
 
             var migrationsToExecute = _migrations.Select(m => new { Version = m.Name.Replace("Migration_", ""), Type = m })
                                                  .Where(m => string.CompareOrdinal(m.Version, databaseVersion) > 0);
@@ -42,13 +42,13 @@ namespace programmersdigest.DataMapper.Migration {
                 await _database.Insert(new DatabaseVersionEntry {
                     Version = migrationToExecute.Version,
                     CreationDate = DateTime.Now
-                });
+                }).ConfigureAwait(false);
             }
         }
 
         private async Task<string> GetDatabaseVersion() {
             try {
-                var versions = await _database.Select<DatabaseVersionEntry>($"SELECT * FROM {META_VERSION_TABLE_NAME} ORDER BY Version DESC LIMIT 1");
+                var versions = await _database.Select<DatabaseVersionEntry>($"SELECT * FROM {META_VERSION_TABLE_NAME} ORDER BY Version DESC LIMIT 1").ConfigureAwait(false);
                 return versions.FirstOrDefault()?.Version;
             }
             catch (Exception) {
